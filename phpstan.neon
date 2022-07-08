@@ -5,6 +5,10 @@ parameters:
 
     bootstrapFiles:
         - phpstan-bootstrap.php
+
+    excludePaths:
+        - Sniffs/*
+
     ignoreErrors:
         -
             message: '#PHPDoc tag @param has invalid value \(\\Monolog\\Formatter\\JsonFormatter::BATCH_MODE_#'

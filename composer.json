@@ -89,7 +89,8 @@
     "autoload-dev": {
         "psr-4": {
             "SprykerSdk\\Sdk\\": "tests/Sdk/",
-            "Hello\\": "extension/Hello/"
+            "Hello\\": "extension/Hello/",
+            "Sdk\\Sniffs\\": "Sniffs/"
         }
     },
     "replace": {
@@ -98,8 +99,8 @@
         "symfony/polyfill-php72": "*"
     },
     "scripts": {
-        "cs-check": "phpcs --colors -p -s --extensions=php --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml --ignore=/tests/_project/, src/ tests/ extension/",
-        "cs-fix": "phpcbf --colors -p --extensions=php --standard=vendor/spryker/code-sniffer/Spryker/ruleset.xml --ignore=/tests/_project/, src/ tests/ extension/",
+        "cs-check": "phpcs --colors -p -s --extensions=php --standard=ruleset.xml src/ tests/ extension/",
+        "cs-fix": "phpcbf --colors -p --extensions=php --standard=ruleset.xml src/ tests/ extension/",
         "stan": "phpstan analyze -l 8 src/",
         "linters": [
             "@cs-fix",

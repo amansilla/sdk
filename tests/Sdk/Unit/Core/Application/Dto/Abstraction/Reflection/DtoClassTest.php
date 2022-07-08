@@ -56,6 +56,8 @@ class DtoClassTest extends Unit
             public string $publicString = 'constructor was not called';
 
             /**
+             * @phpcsSuppress Sdk.Visibility.ForbiddenPrivateProperty.ForbiddenPrivateProperty
+             *
              * @var bool
              */
             private bool $privateBoolean;
