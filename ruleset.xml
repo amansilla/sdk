@@ -15,6 +15,7 @@
     <exclude-pattern>*/tests/_project/*</exclude-pattern>
     <exclude-pattern>*/tests/_helpers/*</exclude-pattern>
     <exclude-pattern>*/tests/_output/*</exclude-pattern>
+    <exclude-pattern>*/tests/Sdk/Unit/Core/Application/Dto/Abstraction/Reflection/DtoClassTest.php</exclude-pattern>
     <exclude-pattern>*/node_modules/*</exclude-pattern>
     <exclude-pattern>*/Sniffs/*</exclude-pattern>
     <exclude-pattern>*/Sniffs/*/*</exclude-pattern>

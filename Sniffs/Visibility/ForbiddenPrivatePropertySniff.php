@@ -16,7 +16,6 @@ final class ForbiddenPrivatePropertySniff implements Sniff
 {
     private const ERROR_CODE_FORBIDDEN_PRIVATE_PROPERTY = 'ForbiddenPrivateProperty';
     private const ERROR_MESSAGE_FORBIDDEN_PRIVATE_PROPERTY = 'Private properties usage is forbidden by Spryker due to extendability reasons.';
-    private const NAME = 'Sdk.Visibility.ForbiddenPrivateProperty';
 
 	/**
 	 * @return array<int, (int|string)>
@@ -34,7 +33,11 @@ final class ForbiddenPrivatePropertySniff implements Sniff
 	 */
 	public function process(File $file, $variablePointer): void
 	{
-		if(!$this->isApplicable($file, $variablePointer)) {
+		if(!$this->isPrivate($file, $variablePointer)) {
+            return;
+        }
+
+        if (!PropertyHelper::isProperty($file, $variablePointer)) {
             return;
         }
 
@@ -50,46 +53,24 @@ final class ForbiddenPrivatePropertySniff implements Sniff
         );
 	}
 
-    private function isApplicable(File $file, int $variablePointer): bool
+    private function isPrivate(File $phpCsFile, int $stackPointer): bool
     {
-        if (!PropertyHelper::isProperty($file, $variablePointer)) {
-            return false;
-        }
-
-        if ($this->isSniffClass($file, $variablePointer)) {
-            return false;
-        }
-
-        $suppress = sprintf('%s.%s', self::NAME, self::ERROR_CODE_FORBIDDEN_PRIVATE_PROPERTY);
-        if (SuppressHelper::isSniffSuppressed($file, $variablePointer, $suppress)) {
-            return false;
-        }
-
-        return true;
+        return (bool)$phpCsFile->findFirstOnLine(T_PRIVATE, $stackPointer);
     }
 
-	private function isSniffClass(File $file, int $position): bool
+	private function getPropertyScopeModifier(File $file, int $position): ?array
 	{
-		$classTokenPosition = ClassHelper::getClassPointer($file, $position);
-		$classNameToken = ClassHelper::getName($file, $classTokenPosition);
-
-		return StringHelper::endsWith($classNameToken, 'Sniff');
-	}
-
-	/**
-	 * @phpcsSuppress SlevomatCodingStandard.TypeHints.DisallowMixedTypeHint.DisallowedMixedTypeHint
-     *
-     * @param File $file
-     * @param int $position
-     *
-     * @return array<mixed>
-	 */
-	private function getPropertyScopeModifier(File $file, int $position): array
-	{
-        $scopeModifierPosition = TokenHelper::findPrevious($file, Tokens::$scopeModifiers, $position - 1);
+        $scopeModifierPosition = $this->findPreviousPosition($file, $position);
 
         $tokens = $file->getTokens();
 
-        return $tokens[$scopeModifierPosition];
+        return $scopeModifierPosition ? $tokens[$scopeModifierPosition] : null;
 	}
+
+    private function findPreviousPosition(File $file, int $position): ?int
+    {
+        $token = $file->findPrevious(Tokens::$scopeModifiers, $position - 1);
+
+        return $token !== false ? $token : null;
+    }
 }
